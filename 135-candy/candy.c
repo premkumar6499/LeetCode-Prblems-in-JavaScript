@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+int candy(int* ratings, int ratingsSize) {
+    if (ratingsSize == 0) return 0;
+    
+    int* candies = (int*)malloc(ratingsSize * sizeof(int));
+    for (int i = 0; i < ratingsSize; i++) candies[i] = 1;
+
+    // Left-to-Right
+    for (int i = 1; i < ratingsSize; i++) {
+        if (ratings[i] > ratings[i - 1]) {
+            candies[i] = candies[i - 1] + 1;
+        }
+    }
+
+    // Right-to-Left
+    int totalCandies = 0;
+    for (int i = ratingsSize - 2; i >= 0; i--) {
+        if (ratings[i] > ratings[i + 1]) {
+            candies[i] = MAX(candies[i], candies[i + 1] + 1);
+        }
+    }
+
+    // Calculate sum
+    for (int i = 0; i < ratingsSize; i++) {
+        totalCandies += candies[i];
+    }
+
+    free(candies);
+    return totalCandies;
+}
